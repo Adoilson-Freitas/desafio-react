@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   MdDelete,
   MdAddCircleOutline,
   MdRemoveCircleOutline,
-} from 'react-icons/md';
+} from "react-icons/md";
 
- import { useCart } from '../../hooks/useCart';
- import { formatPrice } from '../../util/format';
-import { Container, ProductTable, Total } from './styles';
-import { useLayoutEffect } from 'react';
+import { useCart } from "../../hooks/useCart";
+import { formatPrice } from "../../util/format";
+import { Container, ProductTable, Total } from "./styles";
+import { useLayoutEffect } from "react";
 
 interface Product {
   id: number;
@@ -20,53 +20,48 @@ interface Product {
   frete: number;
 }
 
-
-
 const Cart = (): JSX.Element => {
-   const { cart, removeProduct, updateProductAmount } = useCart();
-   const [sublinhar, setSublinhar] = useState("");
-   const [total , settotal] = useState(0);
+  const { cart, removeProduct, updateProductAmount } = useCart();
+  const [sublinhar, setSublinhar] = useState("");
+  const [total, settotal] = useState(0);
 
-   const cartSize = cart.length;
-   const history = useHistory();
+  const cartSize = cart.length;
+  const history = useHistory();
 
+  const cartFormatted = cart.map((product) => ({
+    ...product,
+    priceFormated: formatPrice(product.price),
+    subTotal: formatPrice(product.price * product.amount),
+    freteTotal: formatPrice(product.frete * product.amount),
+  }));
 
-   const cartFormatted = cart.map(product => ({
-     ...product, 
-     priceFormated: formatPrice(product.price),
-     subTotal: formatPrice(product.price * product.amount),
-     freteTotal: formatPrice(product.frete * product.amount),
-   }))
+  useEffect(() => {
+    cart.reduce((sumTotal, product) => {
+      let fretefree = sumTotal + product.price * product.amount; //total sem frete
 
- 
-   useEffect(() => {
-     cart.reduce((sumTotal, product) => {
-       let fretefree = sumTotal + product.price * product.amount; //total sem frete
-
-       let frete = sumTotal + product.price * product.amount + product.frete * product.amount; //total com frete
+      let frete =
+        sumTotal +
+        product.price * product.amount +
+        product.frete * product.amount; //total com frete
 
       if (fretefree > 250) {
-        settotal(fretefree)
-        setSublinhar("sublinhar")
+        settotal(fretefree);
+        setSublinhar("sublinhar");
         return fretefree;
-       } else {
-         settotal(frete)
-         setSublinhar("")
+      } else {
+        settotal(frete);
+        setSublinhar("");
         return frete;
-       }
-     }, 0)
-   
-  }, );
+      }
+    }, 0);
+  });
 
-
- 
   function handleProductIncrement(product: Product) {
-    updateProductAmount( { productId: product.id, amount: product.amount + 1});
+    updateProductAmount({ productId: product.id, amount: product.amount + 1 });
   }
 
-
   function handleProductDecrement(product: Product) {
-    updateProductAmount( { productId: product.id, amount: product.amount - 1});
+    updateProductAmount({ productId: product.id, amount: product.amount - 1 });
   }
 
   function handleRemoveProduct(productId: number) {
@@ -75,9 +70,9 @@ const Cart = (): JSX.Element => {
 
   useLayoutEffect(() => {
     if (cartSize === 0) {
-        history.push("/cart-empty");
+      history.push("/cart-empty");
     }
-  },);
+  });
 
   return (
     <Container>
@@ -92,64 +87,63 @@ const Cart = (): JSX.Element => {
           </tr>
         </thead>
         <tbody>
-         {cartFormatted.map(product => (
+          {cartFormatted.map((product) => (
             <tr key={product.id}>
-            <td>
-              <img src={product.image} alt="Melhores jogos para você!" />
-            </td>
-            <td>
-              <strong>{product.name}</strong>
-              <span>{product.priceFormated}</span>
-            </td>
-            <td>
-              <div>
-                <button
-                  type="button"
-                 disabled={product.amount <= 1}
-                 onClick={() => handleProductDecrement(product)}
-                >
-                  <MdRemoveCircleOutline size={20} />
-                </button>
-                <input
-                  type="text"
-                  readOnly
-                  value={product.amount}
-                />
-                <button
-                  type="button"
-                 onClick={() => handleProductIncrement(product)}
-                >
-                  <MdAddCircleOutline size={20} />
-                </button>
-              </div>
-            </td>
-            <td>
-              <strong  className="subtotal"><span>Subtotal: </span>{product.subTotal}</strong>
-              <strong className={`${sublinhar} frete`}>Frete: <span> {product.freteTotal}</span></strong>
-            </td>
-            
-            <button
+              <td>
+                <img src={product.image} alt="Melhores jogos para você!" />
+              </td>
+              <td>
+                <strong>{product.name}</strong>
+                <span>{product.priceFormated}</span>
+              </td>
+              <td>
+                <div>
+                  <button
+                    type="button"
+                    disabled={product.amount <= 1}
+                    onClick={() => handleProductDecrement(product)}
+                  >
+                    <MdRemoveCircleOutline size={20} />
+                  </button>
+                  <input type="text" readOnly value={product.amount} />
+                  <button
+                    type="button"
+                    onClick={() => handleProductIncrement(product)}
+                  >
+                    <MdAddCircleOutline size={20} />
+                  </button>
+                </div>
+              </td>
+              <td>
+                <strong className="subtotal">
+                  <span>Subtotal: </span>
+                  {product.subTotal}
+                </strong>
+                <strong className={`${sublinhar} frete`}>
+                  Frete: <span> {product.freteTotal}</span>
+                </strong>
+              </td>
+
+              <button
                 className="delete"
                 type="button"
-               onClick={() => handleRemoveProduct(product.id)}
+                onClick={() => handleRemoveProduct(product.id)}
               >
                 <MdDelete size={20} />
-            </button>
-          </tr>
-          
-         ))}
+              </button>
+            </tr>
+          ))}
         </tbody>
       </ProductTable>
 
       <footer>
         <button type="button">Finalizar pedido</button>
-          <Total>
-            <span>TOTAL</span>
-            <strong>{formatPrice(total)}</strong>
-          </Total>
+        <Total>
+          <span>TOTAL</span>
+          <strong>{formatPrice(total)}</strong>
+        </Total>
       </footer>
-      
-    </Container> 
+    </Container>
   );
 };
 

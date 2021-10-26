@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { darken } from 'polished';
+import styled from "styled-components";
+import { darken } from "polished";
 
 export const ProductList = styled.ul`
   display: flex;
@@ -30,22 +30,22 @@ export const ProductList = styled.ul`
     }
   }
 
-    @media screen and (max-width: 875px) {
+  @media screen and (max-width: 875px) {
     form {
       left: 2%;
     }
-   }
+  }
 
-   .star {
-     display: flex;
-   }
+  .star {
+    display: flex;
+  }
 
   li {
     display: flex;
     flex-direction: column;
     background: #fff;
     border-radius: 4px;
-    transition: transform .5s;
+    transition: transform 0.5s;
     padding: 20px;
     margin-top: 30px;
     img {
@@ -84,7 +84,7 @@ export const ProductList = styled.ul`
       transition: background 0.2s;
 
       &:hover {
-        background: ${darken(0.06, '#005c99')};
+        background: ${darken(0.06, "#005c99")};
       }
 
       div {
@@ -111,8 +111,8 @@ export const ProductList = styled.ul`
   }
 
   @media screen and (max-width: 540px) {
-  li {
-    width: 90%;
+    li {
+      width: 90%;
+    }
   }
-}
 `;
