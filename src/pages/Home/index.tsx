@@ -5,14 +5,7 @@ import { ProductList } from "./styles";
 import { api } from "../../services/api";
 import { formatPrice } from "../../util/format";
 import { useCart } from "../../hooks/useCart";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  score: number;
-  image: string;
-}
+import { Product } from "../../types";
 
 interface ProductFormatted extends Product {
   priceFormatted: string;
@@ -94,7 +87,7 @@ const Home = (): JSX.Element => {
       }
     }
     loadProducts();
-  }, []);
+  }, [filter]);
 
   function handleAddProduct(id: number) {
     addProduct(id);

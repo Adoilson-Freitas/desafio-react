@@ -10,15 +10,7 @@ import { useCart } from "../../hooks/useCart";
 import { formatPrice } from "../../util/format";
 import { Container, ProductTable, Total } from "./styles";
 import { useLayoutEffect } from "react";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  amount: number;
-  frete: number;
-}
+import { Product } from "../../types";
 
 const Cart = (): JSX.Element => {
   const { cart, removeProduct, updateProductAmount } = useCart();
@@ -44,7 +36,8 @@ const Cart = (): JSX.Element => {
         product.price * product.amount +
         product.frete * product.amount; //total com frete
 
-      if (fretefree > 250) {
+      let totalToFree = 250; //total maior que 250 frete gratis
+      if (fretefree > totalToFree) {
         settotal(fretefree);
         setSublinhar("sublinhar");
         return fretefree;
